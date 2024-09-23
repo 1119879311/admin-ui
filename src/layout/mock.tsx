@@ -1,0 +1,57 @@
+export const menuData:Array<any> = [
+    {
+        label:"首页",
+        path:'/admin'
+    },
+    {
+        label:"rgba管理",
+        children:[
+            {
+                label:"用户管理",
+                path:'/admin/manager'
+            },
+            {
+                label:"角色管理",
+                path:'/admin/role'
+            },
+            {
+                label:"资源管理",
+                path:'/admin/resource'
+            },
+        ]
+    },
+    {
+        label:"客户管理",
+        children:[
+            {
+                label:"客户列表",
+                path:'/admin/customer'
+            },
+   
+        ]
+    },
+    {
+        label:"订单管理",
+        children:[
+            {
+                label:"订单列表",
+                path:'/admin/order'
+            },
+   
+        ]
+    },
+    {
+        label:"日志管理",
+        children:[
+            {
+                label:"登录日志",
+                path:'/admin/login-log'
+            },
+            {
+                label:"充值日志",
+                path:'/admin/recharge-log'
+            },
+           
+        ]
+    },
+  ]
