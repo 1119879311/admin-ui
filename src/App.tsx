@@ -1,10 +1,12 @@
-import AppRouter from "./router"
+import AppRouter from "./router";
+import Store from "@/model/global";
 
 function App() {
- 
   return (
-    <AppRouter/>
-  )
+    <Store.Provider>
+      <AppRouter />
+    </Store.Provider>
+  );
 }
 
-export default App
+export default App;

@@ -10,6 +10,15 @@ export default defineConfig({
       "@": resolve(__dirname, ".", "src"),
     },
   },
+  server: {
+    proxy: {
+      '/api': {
+        target: 'http://127.0.0.1:3001', // 后端服务地址
+        changeOrigin: true, // 必须设置为true，以避免host header问题
+        rewrite: (path) => path.replace(/^\/api/, '/api') // 可选，重写请求路径
+      }
+    }
+  }
   // css: {
   //   preprocessorOptions: {
   //     less: {
