@@ -7,7 +7,6 @@ import Silder from "./Silder";
 import {Spin} from "antd"
 import Footer from "./Footer";
 import "./index.less"
-import { Outlet } from "react-router-dom";
 interface IAppProps {
     loading?:boolean,
     isHeader?:boolean,
@@ -25,7 +24,7 @@ const App = ({loading, children,isHeader=true,isSider=true,isFooter=true,leftMen
         <BasicLayout
          header={isHeader &&<Header/>}
          sider={isSider &&<Silder data={leftMenu}/>}
-         footer={isSider &&<Footer/>}
+         footer={isFooter &&<Footer/>}
         >
         <Suspense fallback={<div>loading...</div>}>
            {children}

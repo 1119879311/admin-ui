@@ -21,7 +21,7 @@ const BasicLayout = ()=>{
 
     
 
-    return  state.token?<PageLayout leftMenu={leftMenu} loading={loading}><Outlet /></PageLayout>: <Navigate to="/login" replace={true} />
+    return  state.token?<PageLayout leftMenu={leftMenu} loading={loading} isFooter={false}><Outlet /></PageLayout>: <Navigate to="/login" replace={true} />
 }
 
 export default observer(BasicLayout)

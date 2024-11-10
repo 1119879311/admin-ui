@@ -1,14 +1,16 @@
+import { useMount } from '@/hooks/useMount';
 
 import requsetInstance from "@/api/request";
 import { AxiosRequestConfig } from "axios";
-import get from "lodash/get";
+import {get} from "lodash";
 import { useEffect, useRef, useState } from "react";
+import { useUpdate } from './useUpdate';
 
 
 export interface IRequestOption<T=any> {
     initData?:T,
     data?:T,
-    loading?:boolean,
+    isLoading?:boolean,
     deepValue?:any,
     isInitFetch?:boolean,
     emptyValue?:any,
@@ -20,51 +22,45 @@ export interface IRequestOption<T=any> {
 }
 
 const useRequest = <T>(config:AxiosRequestConfig,options:IRequestOption<T>={})=>{
-    const {isInitFetch=true} = options;
+    const {isInitFetch=true} = options || {}
     const [data,setData] = useState(  options.data ||  options.initData)
-    const [loading,setLoading] =useState(options.loading)
-    const initFetch = useRef(isInitFetch)
+    const [loading,setLoading] =useState(false)
     const onQuery = async ()=>{
        try {
-        if(options.data){
+        if(!config.url){
             return
         }
-
-        if(!config.url){
-            throw new Error("url 不能为空")
-        }
-
-        options.loading && setLoading(true)
+        options.isLoading && setLoading(true)
         const {data,params ,url,headers,...reqProps} = config;
         let modifyConfig = {data,params ,url,headers}
         const newConfig = (await options.beforeRequest?.(modifyConfig)) || modifyConfig
-
         let result = await  requsetInstance({...reqProps,...newConfig});
         let resData = result.data
         let callResData= (await options.afterResponse?.(resData)) || resData
         let lastData = options.dataPath ?get(callResData,options.dataPath): callResData;
         setData(lastData || options.emptyValue)
         options.dataCallback?.(lastData || options.emptyValue)
+        return Promise.resolve(lastData)
        } catch (error) {
          options.errorCallback?.(error)
+         return Promise.reject(error)
        }finally{
-        options.loading && setLoading(true)
+        options.isLoading && setLoading(false)
        }
        
     }
-
-    useEffect(()=>{
-        // 清空
-        if(options.deepValue===null){
-            setData(options.emptyValue || options.initData);
-            initFetch.current = true
-            return
-        }
-        if(initFetch.current){
+    useMount(()=>{
+        if(isInitFetch){
             onQuery()
         }
-        initFetch.current = true
-
+    })
+    useUpdate(()=>{
+        if(options.deepValue===null){
+            setData(options.emptyValue ||options.initData)
+        }else{
+            onQuery()
+        }
+        onQuery()
     },[options.deepValue])
     return {data,setData,loading,setLoading,onQuery}
 }   

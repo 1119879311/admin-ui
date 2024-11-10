@@ -27,6 +27,7 @@ const BasicLayout = ({
         <Layout>
           {tabs}
           <Content className="by-layout-contents">
+            {/* {children} */}
             <ByHideScrollbar y={true}>{children}</ByHideScrollbar>
           </Content>
           {footer && <Footer>{footer}</Footer>}
